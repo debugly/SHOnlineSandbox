@@ -1,0 +1,14 @@
+[
+  {
+    "name": "subtree",
+    "isf" : true,
+    "children": [
+      { "name": "zzz" },
+      { "name": "what" }
+    ]
+  },
+  {
+    "name": "subtree2",
+    "isf" : true
+  }
+]

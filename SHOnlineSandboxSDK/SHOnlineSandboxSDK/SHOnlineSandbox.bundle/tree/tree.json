@@ -1,0 +1,39 @@
+{
+  "name" : "xql's iPhone",
+  "isf" : true,
+  "children" : [
+    { "name" : "Documents",
+      "isf" : true
+    },
+    { "name" : "SystemData",
+      "isf" : false },
+    {
+      "name": "Library",
+      "isf" : true,
+      "children": [
+        {
+          "name": "caches",
+          "isf" : true,
+          "children": [
+            { "name": "hello" },
+            { "name": "wat" }
+          ]
+        },
+        { "name": "A",
+        "isf" : true },
+        { "name": "B",
+        "isf" : false },
+        {
+          "name": "C",
+          "isf" : true,
+          "children": [
+            { "name": "C1",
+            "isf" : false },
+            { "name": "C2",
+            "isf" : false }
+          ]
+        }
+      ]
+    }
+  ]
+}
