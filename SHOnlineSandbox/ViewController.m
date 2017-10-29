@@ -7,11 +7,11 @@
 //
 
 #import "ViewController.h"
-#import <SHOnlineSandboxSDK/SHHttpServer.h>
+#import <SHOnlineSandboxSDK/SHHttpService.h>
 
 @interface ViewController ()
 
-@property (nonatomic, strong) SHHttpServer *server;
+@property (nonatomic, strong) SHHttpService *server;
 
 @end
 
@@ -20,8 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.server = [SHHttpServer httpServer];
-    [self.server startWithPort:4040];
+    self.server = [SHHttpService startServerWithPort:4040];
 }
 
 - (void)dealloc

@@ -10,12 +10,14 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
+#import "SHHttpResponseWriter.h"
 
 @interface SHHttpServer ()
 
 @property (nonatomic, assign) int listenPort;
 @property (nonatomic, assign) int listenSocket;
 @property (nonatomic, assign) BOOL done;
+@property (nonatomic, copy) SHRequestHandler requestHandler;
 
 @end
 
@@ -62,7 +64,7 @@
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
-
+    
     if (bind(listenSocket, (const struct sockaddr *)&addr, sizeof(addr)) == -1) {
         [self cleanSocket:listenSocket];
         return NO;
@@ -199,65 +201,108 @@
     return headersDictionary;
 }
 
+- (void)resetRequestHandler:(SHRequestHandler)handler
+{
+    self.requestHandler = handler;
+}
+
 - (void)handleClientConnection:(id)data
 {
     NSArray *args = (NSArray *)data;
     if (args.count < 2) {
         return;
     }
-    NSString *address = [args objectAtIndex:0];
-    int socket = [(NSNumber *)[args objectAtIndex:1] intValue];
     
     @autoreleasepool {
+        
+        int socket = [(NSNumber *)[args objectAtIndex:1] intValue];
         NSData *httpInitLine = [self line:socket];
         if (httpInitLine) {
             NSString *httpInitLineString = [[NSString alloc] initWithData:httpInitLine encoding:NSASCIIStringEncoding];
             NSLog(@"REQUEST HTTP INIT LINE: %@", httpInitLineString);
             
-            NSArray *initLineTokens = [httpInitLineString componentsSeparatedByString:@" "];
+            NSArray *httpRequestLine = [httpInitLineString componentsSeparatedByString:@" "];
             
-            NSString *requestMethod = nil;
-            NSURL *requestUrl = nil;
-            
-            if ([initLineTokens count] >= 3) {
-                requestMethod = [initLineTokens objectAtIndex:0];
-                NSString *requestUrlString = [initLineTokens objectAtIndex:1];
-                if (requestUrlString) {
-                    requestUrl = [NSURL URLWithString:requestUrlString];
-                }
+            if ([httpRequestLine count] >= 3) {
+                NSString *requestMethod = [httpRequestLine objectAtIndex:0];
+                NSURL *requestUrl = [NSURL URLWithString:[httpRequestLine objectAtIndex:1]];
+                //                NSDictionary *requestQueryParams = [self queryParameters:requestUrl];
+                
+                NSMutableURLRequest *urlReq = [NSMutableURLRequest requestWithURL:requestUrl];
+                urlReq.HTTPMethod = requestMethod;
+                urlReq.allHTTPHeaderFields = [self headers:socket];
+                NSString *address = [args objectAtIndex:0];
+                
+                [self handleRequest:urlReq address:address socket:socket];
+                
+            }else{
+                [self cleanSocket:socket];
             }
-            
-            NSDictionary *requestQueryParams = [self queryParameters:requestUrl];
-            NSDictionary *requestHeaders = [self headers:socket];
-
-            if (requestUrl) {
-                NSString *relativePath = [requestUrl relativePath];
-                if (relativePath) {
-//                    NSObject <HVRequestHandler> *handler = nil;
-//                    @synchronized (handlers) {
-//                        handler = [handlers objectForKey:relativePath];
-//                    }
-//                    if (handler) {
-//                        [handler handleRequest:relativePath withHeaders:requestHeaders query:requestQueryParams address:address onSocket:socket];
-//                    }else{
-//                        BOOL isHandled = NO;
-//                        for (NSObject <HVRequestHandler> *handler in resourceHandlers) {
-//                            if ([handler handleRequest:relativePath withHeaders:requestHeaders query:requestQueryParams address:address onSocket:socket]) {
-//                                isHandled = YES;
-//                                break;
-//                            }
-//                        }
-//                        if (!isHandled) {
-//                            NSLog(@"---没有返回的资源：%@",relativePath);
-//                        }
-//                    }
-                }
-            }
-
         }else{
             [self cleanSocket:socket];
         }
     }
-    
 }
+
+- (void)handleRequest:(NSURLRequest *)urlReq address:(NSString *)address socket:(int)socket
+{
+    if (self.requestHandler) {
+        
+        __weak __typeof(self)weakself = self;
+        SHRequestCallback callback = ^(NSData *data,NSString *mime){
+            __strong __typeof(weakself)self = weakself;
+            [self sendResponseWithSocket:socket payload:data mime:mime];
+        };
+        
+        BOOL canHandle = self.requestHandler(urlReq, address, callback);
+        
+        ///不能处理时搞一个默认 404 页面。
+        if(!canHandle){
+            
+            NSData *data = [@"<H1>404</H1><H3>您想要的内容跑去火星旅游了！</H3>" dataUsingEncoding:NSUTF8StringEncoding];
+            ///状态行
+            [SHHttpResponseWriter writeText:@"HTTP/1.0 404 OK\r\n" toSocket:socket];
+            ///响应头
+            //告诉浏览器使用哪种编码，否者中文会乱码的！
+            [SHHttpResponseWriter writeText:@"Content-Type: text/html;charset=utf-8\r\n" toSocket:socket];
+            ///内容长度
+            NSString *lengthHeader = [NSString stringWithFormat:@"Content-Length: %ld\r\n",data.length];
+            [SHHttpResponseWriter writeText:lengthHeader toSocket:socket];
+            
+            ///空白行，这个必须有，否则浏览器里看不到响应内容；
+            [SHHttpResponseWriter writeText:@"\r\n" toSocket:socket];
+            
+            ///响应内容
+            [SHHttpResponseWriter writeData:data toSocket:socket];
+            
+            [self cleanSocket:socket];
+
+        }
+    }
+}
+
+- (void)sendResponseWithSocket:(int)socket payload:(NSData *)data mime:(NSString *)mime
+{
+    ///状态行
+    [SHHttpResponseWriter writeText:@"HTTP/1.0 200 OK\r\n" toSocket:socket];
+    ///响应头
+    //告诉浏览器使用哪种编码，否者中文会乱码的！
+    if (mime.length < 1) {
+        mime = @"text/html";
+    }
+    NSString *ch = [NSString stringWithFormat:@"Content-Type: %@;charset=utf-8\r\n",mime];
+    [SHHttpResponseWriter writeText:ch toSocket:socket];
+    ///内容长度
+    NSString *lengthHeader = [NSString stringWithFormat:@"Content-Length: %ld\r\n",data.length];
+    [SHHttpResponseWriter writeText:lengthHeader toSocket:socket];
+    
+    ///空白行，这个必须有，否则浏览器里看不到响应内容；
+    [SHHttpResponseWriter writeText:@"\r\n" toSocket:socket];
+    
+    ///响应内容
+    [SHHttpResponseWriter writeData:data toSocket:socket];
+    
+    [self cleanSocket:socket];
+}
+
 @end

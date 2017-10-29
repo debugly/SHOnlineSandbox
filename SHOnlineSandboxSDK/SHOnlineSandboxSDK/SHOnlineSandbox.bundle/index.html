@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <meta name="keywords" content="{{ page.keywords }}">
+  <meta name="author" content="{{ site.email }}">
+
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+
+  <link href="/common.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+  <div class="header">
+      Sohu Online Sandbox
+  </div>
+
+  <div class="list">
+    <ul class="folder">
+      <li class="folder-content isfolder isopen">A</li>
+      <li class="folder-content">B</li>
+      <li class="folder-content">C</li>
+      <li class="folder-content">
+        D
+        <ul class="folder">
+          <li class="folder-content">E</li>
+          <li class="folder-content">F</li>
+          <li class="folder-content">G</li>
+          <li class="folder-content">H</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+</body>
+</html>

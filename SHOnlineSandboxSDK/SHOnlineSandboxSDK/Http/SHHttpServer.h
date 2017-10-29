@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SHHttpCommonHeader.h"
 
 @interface SHHttpServer : NSObject
 
@@ -15,5 +16,7 @@
 - (BOOL)startWithPort:(int)port;
 
 - (void)stop;
+
+- (void)resetRequestHandler:(SHRequestHandler)handler;
 
 @end

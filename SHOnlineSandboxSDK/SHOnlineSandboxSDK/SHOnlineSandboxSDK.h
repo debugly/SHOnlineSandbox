@@ -15,5 +15,5 @@ FOUNDATION_EXPORT double SHOnlineSandboxSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char SHOnlineSandboxSDKVersionString[];
 
 
-#import <SHOnlineSandboxSDK/SHHttpServer.h>
+#import <SHOnlineSandboxSDK/SHHttpService.h>
 
