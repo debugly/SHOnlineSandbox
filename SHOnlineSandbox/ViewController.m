@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.server = [SHHttpService startServerWithPort:4040];
+    self.server = [SHHttpService startServerWithPort:9999];
 }
 
 - (void)dealloc

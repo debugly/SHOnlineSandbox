@@ -1,39 +1,71 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
-  <meta name="keywords" content="{{ page.keywords }}">
-  <meta name="author" content="{{ site.email }}">
 
-  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-
-  <link href="/common.css" rel="stylesheet" type="text/css">
-
+  <link href="./index.css" rel="stylesheet" type="text/css">
+  <script src="./vue.js"></script>
+  <script src="./index.js"></script>
+  <script src="./http.js"></script>
 </head>
 <body>
-  <div class="header">
-      Sohu Online Sandbox
-  </div>
 
-  <div class="list">
-    <ul class="folder">
-      <li class="folder-content isfolder isopen">A</li>
-      <li class="folder-content">B</li>
-      <li class="folder-content">C</li>
-      <li class="folder-content">
-        D
-        <ul class="folder">
-          <li class="folder-content">E</li>
-          <li class="folder-content">F</li>
-          <li class="folder-content">G</li>
-          <li class="folder-content">H</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+
+  <!-- item template -->
+  <script type="text/x-template" id="item-template">
+    <li>
+      <div :class="{bold: isFolder}">
+        <span v-if="isFolder" @click="toggle">{{model.name}}[{{open ? '-' : '+'}}]</span>
+        <a v-else @click="download">{{model.name}}</a>
+      </div>
+      <ul v-show="open" v-if="isFolder">
+        <item
+          class="item"
+          v-for="model in model.children"
+          :model="model">
+        </item>
+        <!-- <li class="add" @click="addChild">+</li> -->
+      </ul>
+    </li>
+  </script>
+
+  <p>(You can double click on an item to turn it into a folder.)</p>
+
+  <!-- the demo root element -->
+  <ul id="demo">
+    <item
+      class="item"
+      :model="treeData">
+    </item>
+  </ul>
+
+<script type="text/javascript">
+// boot up the demo
+var demo = new Vue({
+  el: '#demo',
+  data: {
+    treeData: {}
+  },
+  created: function(){
+      var _self = this
+      var url = 'http://localhost:9999/sandbox.json';
+      httpGet(url,function(data){
+        _self.treeData = JSON.parse(data);//http://blog.csdn.net/wangxiaohu__/article/details/7254598/
+      },function(err){
+        alert('sandbox-err:' + err)
+      },function() {
+
+      })
+    }
+
+})
+
+</script>
+
+
 
 </body>
 </html>

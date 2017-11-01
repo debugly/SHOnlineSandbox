@@ -15,18 +15,36 @@ Vue.component('item', {
     }
   },
   methods: {
+    download: function(){
+
+      var url = "/download.do?path=" + this.model.path;
+      if (typeof (this.iframe) == "undefined")
+      {
+          var iframe = document.createElement("iframe");
+          this.iframe = iframe;
+          document.body.appendChild(iframe);
+      }
+      // alert(download_file.iframe);
+      this.iframe.src = url;
+      this.iframe.style.display = "none";
+    },
     toggle: function () {
       if (this.isFolder) {
         var wantOpen = !this.open;
         if(wantOpen){
           if (!this.model.children || this.model.children.length == 0) {
             var _self = this;
-            httpGet('http://localhost/subtree.json',function(data){
+            var url = 'http://localhost:9999/sandbox.json?path=' + this.model.path;
+            console.log(url);
+            httpGet(url,function(data){
               var json = JSON.parse(data);
-              if (!_self.children) {
-                Vue.set(_self.model, 'children', json);
+
+              if(json instanceof Array){
+                if (!_self.children) {
+                  Vue.set(_self.model, 'children', json);
+                }
+                _self.open = !_self.open;
               }
-              _self.open = !_self.open;
             },function(err){
               alert('sandbox-err:' + err)
             },function() {
@@ -38,6 +56,8 @@ Vue.component('item', {
         }else {
           this.open = !this.open
         }
+      }else {
+
       }
     },
     changeType: function () {
