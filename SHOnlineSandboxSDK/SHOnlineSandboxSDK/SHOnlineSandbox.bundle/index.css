@@ -2,18 +2,72 @@ body {
   font-family: Menlo, Consolas, monospace;
   color: #444;
 }
+
 .item {
   cursor: pointer;
 }
-.bold {
+
+.folder {
   font-weight: bold;
+  background-color: #d2d2d2;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 2rem;
+  border-bottom: 1px solid #eee;
 }
-ul {
+
+.folder span {
+    color: #268bd2;
+}
+
+.notfolder{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 2rem;
+  border-left: 1px solid #d2d2d2;
+  border-right: 1px solid #d2d2d2;
+}
+/*ul {
   padding-left: 1em;
   line-height: 1.5em;
   list-style-type: dot;
+}*/
+
+html,body{
+  margin: 0px;
 }
 
 .device-info{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+ul{
   list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+li ul{
+  list-style: none;
+  padding-left: 2rem;
+}
+
+.header{
+  background-color: #222;
+  font-size: 1.5rem;
+  line-height: 4rem;
+  vertical-align: middle;
+  text-align: center;
+  color: white;
+}
+
+.content{
+  padding-left: 2rem;
+  padding-right: 2rem;
+  background-color: white;
 }

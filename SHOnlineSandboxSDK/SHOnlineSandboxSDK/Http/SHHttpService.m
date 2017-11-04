@@ -92,6 +92,14 @@
         return YES;
     }];
     
+    
+    [SHHttpResponse registAPI:@"/uname.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+        NSString *name = [[UIDevice currentDevice]name];
+        NSData *data = [name dataUsingEncoding:NSUTF8StringEncoding];
+        callback(data,@"text/plain");
+        return YES;
+    }];
+    
     [SHHttpResponse registAPI:@"/appinfo.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
         
         NSString *name = [[UIDevice currentDevice]name];

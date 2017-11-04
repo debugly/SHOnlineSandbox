@@ -12,6 +12,9 @@ Vue.component('item', {
   computed: {
     isFolder: function () {
       return this.model.isf
+    },
+    listyle: function () {
+      return this.model.isf ? 'folder' : 'notfolder'
     }
   },
   methods: {

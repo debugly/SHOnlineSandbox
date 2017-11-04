@@ -13,32 +13,20 @@
 </head>
 <body>
 
+<div id="device-name" class="header">
+    {{ uname }}
+</div>
 
-  <!-- item template -->
-  <script type="text/x-template" id="item-template">
-    <li>
-      <div :class="{bold: isFolder}">
-        <span v-if="isFolder" @click="toggle">{{model.name}}[{{open ? '-' : '+'}}]</span>
-        <a v-else @click="download">{{model.name}}</a>
-      </div>
-      <ul v-show="open" v-if="isFolder">
-        <item
-          class="item"
-          v-for="model in model.children"
-          :model="model">
-        </item>
-        <!-- <li class="add" @click="addChild">+</li> -->
-      </ul>
+
+<div class="content">
+
+  <div class="device-info">
+    <ul id="device-info">
+    <li v-for="item in items">
+      {{ item }}
     </li>
-  </script>
-
-
-
-  <ul id="device-info" class="device-info">
-  <li v-for="item in items">
-    {{ item }}
-  </li>
-  </ul>
+    </ul>
+  </div>
 
   <!-- the sandbox root element -->
   <ul id="sandbox">
@@ -48,7 +36,46 @@
     </item>
   </ul>
 
+</div>
+
+<!-- item template -->
+<script type="text/x-template" id="item-template">
+  <li>
+    <div :class="listyle">
+      <span v-if="isFolder" @click="toggle">{{model.name}}[{{open ? '-' : '+'}}]</span>
+      <a v-else @click="download">{{model.name}}</a>
+    </div>
+    <ul v-show="open" v-if="isFolder">
+      <item
+        class="item"
+        v-for="model in model.children"
+        :model="model">
+      </item>
+      <!-- <li class="add" @click="addChild">+</li> -->
+    </ul>
+  </li>
+</script>
+
 <script type="text/javascript">
+
+
+new Vue({
+  el: '#device-name',
+  data: {
+    uname: ''
+  },
+  created: function(){
+      var _self = this;
+      httpGet('/uname.json',function(data){
+        _self.uname = data;
+      },function(err){
+        _self.uname = '获取设备信息失败';
+        alert('获取设备信息失败:' + err)
+      },function() {
+
+      })
+    }
+})
 
 new Vue({
   el: '#device-info',
