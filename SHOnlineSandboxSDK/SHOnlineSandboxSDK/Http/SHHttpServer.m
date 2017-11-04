@@ -10,6 +10,8 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
+#import <ifaddrs.h>
+
 #import "SHHttpResponseWriter.h"
 
 @interface SHHttpServer ()
@@ -18,6 +20,7 @@
 @property (nonatomic, assign) int listenSocket;
 @property (nonatomic, assign) BOOL done;
 @property (nonatomic, copy) SHRequestHandler requestHandler;
+@property (nonatomic, copy) NSString *serverIP;
 
 @end
 
@@ -59,13 +62,60 @@
         //?
     }
     
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(port);
+    struct ifaddrs* interfaces = NULL;
+    int success = 0;
+    /*
+     
+     4G-> WiFi 崩溃：
+     malloc: *** error for object 0x128b32a08: incorrect checksum for freed object - object was probably modified after being freed.
+     *** set a breakpoint in malloc_error_break to debug
+     */
+    // retrieve the current interfaces - returns 0 on success
+    @try {
+        success = getifaddrs(&interfaces);
+    } @catch (NSException *exception) {
+        //NSCog(@"get ip failed：%@",exception);
+    }
     
-    if (bind(listenSocket, (const struct sockaddr *)&addr, sizeof(addr)) == -1) {
+    struct sockaddr_in serverAddr;
+    memset(&serverAddr, 0, sizeof(serverAddr));
+    serverAddr.sin_port = htons(port);
+    
+    if (success == 0)
+    {
+        // Loop through linked list of interfaces
+        struct ifaddrs* temp_addr = interfaces;
+        
+        while (temp_addr != NULL)
+        {
+            sa_family_t family = temp_addr->ifa_addr->sa_family;
+            if (family == AF_INET)
+            {
+                self.serverIP = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                
+                serverAddr.sin_family = AF_INET;
+                serverAddr.sin_addr.s_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr.s_addr;
+                break;
+            } else if (family == AF_INET6) {
+                
+                char buffer[1024] = {0};
+                inet_ntop(AF_INET6, &(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr), buffer, sizeof(buffer));
+                
+                self.serverIP = [NSString stringWithUTF8String:buffer];
+                serverAddr.sin_family = AF_INET6;
+                serverAddr.sin_addr.s_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr.s_addr;
+                break;
+            }
+            
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    
+    freeifaddrs(interfaces);
+
+//    NSLog(@"server ip:%@",self.serverIP);
+    
+    if (bind(listenSocket, (const struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
         [self cleanSocket:listenSocket];
         return NO;
     }

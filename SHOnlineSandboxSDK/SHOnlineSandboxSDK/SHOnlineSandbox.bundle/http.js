@@ -22,8 +22,10 @@ function ajaxObject() {
 }
 
 // ajax get
-function httpGet ( url , fnSucceed , fnFail , fnLoading ) {
+function httpGet (path , fnSucceed , fnFail , fnLoading ) {
     var ajax = ajaxObject();
+    var url = 'http://' + location.hostname + ':' + location.port + path;
+    console.log(url);
     ajax.open("GET", url , true );
     // ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
     ajax.onreadystatechange = function () {

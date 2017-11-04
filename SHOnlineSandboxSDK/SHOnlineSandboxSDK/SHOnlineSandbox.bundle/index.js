@@ -34,9 +34,8 @@ Vue.component('item', {
         if(wantOpen){
           if (!this.model.children || this.model.children.length == 0) {
             var _self = this;
-            var url = 'http://localhost:9999/sandbox.json?path=' + this.model.path;
-            console.log(url);
-            httpGet(url,function(data){
+            var path = '/sandbox.json?path=' + this.model.path;
+            httpGet(path,function(data){
               var json = JSON.parse(data);
 
               if(json instanceof Array){

@@ -12,6 +12,7 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) SHHttpService *server;
+@property (weak, nonatomic) IBOutlet UITextView *tx;
 
 @end
 
@@ -19,8 +20,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    self.server = [SHHttpService startServerWithPort:9999];
+    
+    const int port = 9999;
+    
+    self.server = [SHHttpService startServerWithPort:port];
+    
+    NSString *text = [NSString stringWithFormat:@"请访问：http://%@:%d/index.html",[self.server serverIP],port];
+    
+    NSLog(@"%@",text);
+    
+    self.tx.text = text;
 }
 
 - (void)dealloc

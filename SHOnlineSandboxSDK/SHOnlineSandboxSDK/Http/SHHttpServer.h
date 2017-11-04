@@ -19,4 +19,6 @@
 
 - (void)resetRequestHandler:(SHRequestHandler)handler;
 
+- (NSString *)serverIP;
+
 @end

@@ -56,9 +56,8 @@ new Vue({
     items: []
   },
   created: function(){
-      var _self = this
-      var url = 'http://localhost:9999/appinfo.json';
-      httpGet(url,function(data){
+      var _self = this;
+      httpGet('/appinfo.json',function(data){
         var items = JSON.parse(data);
         var arr = [];
         for (idx in items) {
@@ -84,8 +83,7 @@ new Vue({
   },
   created: function(){
       var _self = this
-      var url = 'http://localhost:9999/sandbox.json';
-      httpGet(url,function(data){
+      httpGet('/sandbox.json',function(data){
         _self.treeData = JSON.parse(data);//http://blog.csdn.net/wangxiaohu__/article/details/7254598/
       },function(err){
         alert('sandbox-err:' + err)

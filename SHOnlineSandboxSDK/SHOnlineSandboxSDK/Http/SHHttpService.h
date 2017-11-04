@@ -13,5 +13,6 @@
 - (instancetype)initWithPort:(int)port;
 + (instancetype)startServerWithPort:(int)port;
 - (void)stop;
+- (NSString *)serverIP;
 
 @end

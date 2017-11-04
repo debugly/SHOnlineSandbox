@@ -47,6 +47,11 @@
     return [[self alloc]initWithPort:port];
 }
 
+- (NSString *)serverIP
+{
+    return [self.server serverIP];
+}
+
 - (void)stop
 {
     [self.server stop];
