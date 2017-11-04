@@ -89,22 +89,30 @@
         while (temp_addr != NULL)
         {
             sa_family_t family = temp_addr->ifa_addr->sa_family;
-            if (family == AF_INET)
-            {
-                self.serverIP = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+            NSString* ifa_name = [NSString stringWithUTF8String: temp_addr->ifa_name];
+            
+            if([@"en0" isEqualToString:ifa_name]){
+                NSString *serverIP = nil;
+                if (family == AF_INET)
+                {
+                    serverIP = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                } else if (family == AF_INET6) {
+                    
+                    struct in_addr sin_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr;
+                    if (sin_addr.s_addr != 0) {
+                        char buffer[1024] = {0};
+                        inet_ntop(AF_INET6, &sin_addr, buffer, sizeof(buffer));
+                        serverIP = [NSString stringWithUTF8String:buffer];
+                    }
+                }
                 
-                serverAddr.sin_family = AF_INET;
-                serverAddr.sin_addr.s_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr.s_addr;
-                break;
-            } else if (family == AF_INET6) {
-                
-                char buffer[1024] = {0};
-                inet_ntop(AF_INET6, &(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr), buffer, sizeof(buffer));
-                
-                self.serverIP = [NSString stringWithUTF8String:buffer];
-                serverAddr.sin_family = AF_INET6;
-                serverAddr.sin_addr.s_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr.s_addr;
-                break;
+                if(serverIP && ![serverIP isEqualToString:@"0.0.0.0"]){
+                    serverAddr.sin_family = family;
+                    serverAddr.sin_addr.s_addr = ((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr.s_addr;
+                    self.serverIP = serverIP;
+                    
+                    break;
+                }
             }
             
             temp_addr = temp_addr->ifa_next;

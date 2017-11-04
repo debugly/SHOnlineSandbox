@@ -106,14 +106,18 @@
         NSString *sysName = [[UIDevice currentDevice]systemName];
         NSString *localizedModel = [[UIDevice currentDevice]localizedModel];
         NSString *systemVersion = [[UIDevice currentDevice]systemVersion];
+        [[UIDevice currentDevice]setBatteryMonitoringEnabled:YES];
         UIDeviceBatteryState batteryState = [[UIDevice currentDevice]batteryState];
         float batteryLevel = [[UIDevice currentDevice]batteryLevel];
         NSString *idfv = [[[UIDevice currentDevice]identifierForVendor]UUIDString];
         
         NSString *sys = [NSString stringWithFormat:@"%@(%@)",sysName,systemVersion];
         NSString *battery = @"";
-        if (UIDeviceBatteryStateCharging == batteryState) {
-            battery = [NSString stringWithFormat:@"充电中(%g)",batteryLevel];
+        
+        if (UIDeviceBatteryStateUnknown == batteryState) {
+            battery = @"未知状态";
+        }else if (UIDeviceBatteryStateCharging == batteryState) {
+            battery = [NSString stringWithFormat:@"充电中(%d%%)",(int)(100 * batteryLevel)];
         }else if (UIDeviceBatteryStateFull == batteryState){
             battery = [NSString stringWithFormat:@"已充满"];
         }else{
