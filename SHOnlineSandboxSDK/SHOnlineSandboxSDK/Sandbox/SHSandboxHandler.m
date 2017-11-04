@@ -9,6 +9,7 @@
 #import "SHSandboxHandler.h"
 #import "SHHttpResponse.h"
 #import "NSURLRequest+Query.h"
+#import <UIKit/UIKit.h>
 
 @implementation SHSandboxHandler
 
@@ -41,7 +42,8 @@
         NSString *path = [ps objectForKey:@"path"];
         
         if (!path || path.length == 0) {
-            NSDictionary *result = @{@"name":@"xql",
+            
+            NSDictionary *result = @{@"name":[[UIDevice currentDevice]name],
                                      @"path":@"/",
                                      @"isf":@(YES)};
             NSData *data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];

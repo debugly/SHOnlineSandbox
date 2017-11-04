@@ -10,6 +10,7 @@
 #import "SHHttpServer.h"
 #import "SHHttpResponse.h"
 #import "SHSandboxHandler.h"
+#import <UIKit/UIDevice.h>
 
 @interface SHHttpService ()
 
@@ -83,6 +84,37 @@
             payload = [NSString stringWithFormat:@"%@(%@)",urlCallback,payload];
         }
         callback([payload dataUsingEncoding:NSUTF8StringEncoding],@"text/html");
+        return YES;
+    }];
+    
+    [SHHttpResponse registAPI:@"/appinfo.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+        
+        NSString *name = [[UIDevice currentDevice]name];
+        NSString *sysName = [[UIDevice currentDevice]systemName];
+        NSString *localizedModel = [[UIDevice currentDevice]localizedModel];
+        NSString *systemVersion = [[UIDevice currentDevice]systemVersion];
+        UIDeviceBatteryState batteryState = [[UIDevice currentDevice]batteryState];
+        float batteryLevel = [[UIDevice currentDevice]batteryLevel];
+        NSString *idfv = [[[UIDevice currentDevice]identifierForVendor]UUIDString];
+        
+        NSString *sys = [NSString stringWithFormat:@"%@(%@)",sysName,systemVersion];
+        NSString *battery = @"";
+        if (UIDeviceBatteryStateCharging == batteryState) {
+            battery = [NSString stringWithFormat:@"充电中(%g)",batteryLevel];
+        }else if (UIDeviceBatteryStateFull == batteryState){
+            battery = [NSString stringWithFormat:@"已充满"];
+        }else{
+            battery = [NSString stringWithFormat:@"剩余电量(%g)",batteryLevel];
+        }
+        
+        NSArray *info = @[@{@"名称" : name},
+                          @{@"系统" : sys},
+                          @{@"电池" : battery},
+                          @{@"IDFV" : idfv},
+                          @{@"模式" : localizedModel}];
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:nil];
+        callback(data,@"text/json");
         return YES;
     }];
     
