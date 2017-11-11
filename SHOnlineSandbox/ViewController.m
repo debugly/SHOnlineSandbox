@@ -30,6 +30,9 @@
     NSLog(@"%@",text);
     
     self.tx.text = text;
+    
+    ///屏幕常亮
+    [[UIApplication sharedApplication]setIdleTimerDisabled:YES];
 }
 
 - (void)dealloc
