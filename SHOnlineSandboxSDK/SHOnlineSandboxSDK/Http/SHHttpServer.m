@@ -307,9 +307,9 @@
     if (self.requestHandler) {
         
         __weak __typeof(self)weakself = self;
-        SHRequestCallback callback = ^(NSData *data,NSString *mime){
+        SHRequestCallback callback = ^(SHHttpResponse *resp){
             __strong __typeof(weakself)self = weakself;
-            [self sendResponseWithSocket:socket payload:data mime:mime];
+            [self sendResponseWithSocket:socket response:resp];
         };
         
         BOOL canHandle = self.requestHandler(urlReq, address, callback);
@@ -317,48 +317,78 @@
         ///不能处理时搞一个默认 404 页面。
         if(!canHandle){
             
-            NSData *data = [@"<H1>404</H1><H3>您想要的内容跑去火星旅游了！</H3>" dataUsingEncoding:NSUTF8StringEncoding];
             ///状态行
-            [SHHttpResponseWriter writeText:@"HTTP/1.0 404 OK\r\n" toSocket:socket];
+            [SHHttpResponseWriter writeText:@"HTTP/1.1 404 OK\r\n" toSocket:socket];
             ///响应头
-            //告诉浏览器使用哪种编码，否者中文会乱码的！
-            [SHHttpResponseWriter writeText:@"Content-Type: text/html;charset=utf-8\r\n" toSocket:socket];
-            ///内容长度
-            NSString *lengthHeader = [NSString stringWithFormat:@"Content-Length: %ld\r\n",data.length];
-            [SHHttpResponseWriter writeText:lengthHeader toSocket:socket];
+            
+            NSMutableDictionary *headerDic = [NSMutableDictionary dictionary];
+            
+            [headerDic setObject:@"Keep-Alive" forKey:@"Connection"];
+            [headerDic setObject:@"UTF-8" forKey:@"Charset"];
+            [headerDic setObject:@"text/html" forKey:@"Content-Type"];
+            
+            ///构建header
+            __block NSString *respHeader = @"";
+            
+            [headerDic enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL * _Nonnull stop) {
+                respHeader = [respHeader stringByAppendingFormat:@"%@: %@\r\n",key,obj];
+            }];
+            
+            [SHHttpResponseWriter writeText:respHeader toSocket:socket];
             
             ///空白行，这个必须有，否则浏览器里看不到响应内容；
             [SHHttpResponseWriter writeText:@"\r\n" toSocket:socket];
             
-            ///响应内容
-            [SHHttpResponseWriter writeData:data toSocket:socket];
-            
             [self cleanSocket:socket];
-
         }
     }
 }
 
-- (void)sendResponseWithSocket:(int)socket payload:(NSData *)data mime:(NSString *)mime
+- (void)sendResponseWithSocket:(int)socket response:(SHHttpResponse *)resp
 {
+    NSInteger status = [resp statusCode];
+    NSString * statusLine = [NSString stringWithFormat:@"HTTP/1.1 %ld OK\r\n",status];
     ///状态行
-    [SHHttpResponseWriter writeText:@"HTTP/1.0 200 OK\r\n" toSocket:socket];
+    [SHHttpResponseWriter writeText:statusLine toSocket:socket];
+    
+    NSString *mime = [resp mimeType];
     ///响应头
     //告诉浏览器使用哪种编码，否者中文会乱码的！
     if (mime.length < 1) {
         mime = @"text/html";
     }
-    NSString *ch = [NSString stringWithFormat:@"Content-Type: %@;charset=utf-8\r\n",mime];
-    [SHHttpResponseWriter writeText:ch toSocket:socket];
+    
+    NSData *data =  [resp data];
+    
+    NSMutableDictionary *headerDic = [NSMutableDictionary dictionaryWithDictionary:resp.header];
+    
+    [headerDic setObject:@"Keep-Alive" forKey:@"Connection"];
+    //告诉浏览器使用哪种编码，否者中文会乱码的！
+    [headerDic setObject:@"UTF-8" forKey:@"Charset"];
+    [headerDic setObject:mime forKey:@"Content-Type"];
+    
     ///内容长度
-    NSString *lengthHeader = [NSString stringWithFormat:@"Content-Length: %ld\r\n",data.length];
-    [SHHttpResponseWriter writeText:lengthHeader toSocket:socket];
+    if (data.length > 0) {
+        [headerDic setObject:@(data.length) forKey:@"Content-Length"];
+    }
+    
+    ///构建header
+    __block NSString *respHeader = @"";
+    
+    [headerDic enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL * _Nonnull stop) {
+        respHeader = [respHeader stringByAppendingFormat:@"%@: %@\r\n",key,obj];
+    }];
+    
+    ///发送请求头
+    [SHHttpResponseWriter writeText:respHeader toSocket:socket];
     
     ///空白行，这个必须有，否则浏览器里看不到响应内容；
     [SHHttpResponseWriter writeText:@"\r\n" toSocket:socket];
     
-    ///响应内容
-    [SHHttpResponseWriter writeData:data toSocket:socket];
+    if (data.length > 0) {
+        ///响应内容
+        [SHHttpResponseWriter writeData:data toSocket:socket];
+    }
     
     [self cleanSocket:socket];
 }

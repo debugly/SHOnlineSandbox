@@ -1,5 +1,5 @@
 //
-//  SHHttpResponseProtocol.h
+//  SHHttpRouteProtocol.h
 //  SHOnlineSandboxSDK
 //
 //  Created by 许乾隆 on 2017/10/11.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SHHttpCommonHeader.h"
 
-@protocol SHHttpResponseProtocol <NSObject>
+@protocol SHHttpRouteProtocol <NSObject>
 
 @required
 + (BOOL)handleRequest:(NSURLRequest *)req clientAddress:(NSString *)clientAddress callback:(SHRequestCallback)callback;

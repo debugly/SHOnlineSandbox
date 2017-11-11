@@ -1,8 +1,3 @@
-body {
-  font-family: Menlo, Consolas, monospace;
-  color: #444;
-}
-
 .item {
   cursor: pointer;
 }
@@ -37,10 +32,6 @@ body {
   list-style-type: dot;
 }*/
 
-html,body{
-  margin: 0px;
-}
-
 .device-info{
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -55,35 +46,4 @@ ul{
 li ul{
   list-style: none;
   padding-left: 2rem;
-}
-
-.header{
-  background-color: #222;
-  font-size: 1.5rem;
-  line-height: 4rem;
-  vertical-align: middle;
-  text-align: center;
-  color: white;
-}
-
-.content{
-  padding-left: 2rem;
-  padding-right: 2rem;
-  background-color: white;
-}
-
-.footer{
-  margin-top: 40px;
-  background-color: #222;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 1rem;
-  vertical-align: middle;
-  text-align: center;
-  color: white;
-  line-height: 1.5rem;
-}
-
-.footer a{
-  color: white;
 }

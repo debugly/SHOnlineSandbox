@@ -7,7 +7,7 @@
 //
 
 #import "SHSandboxHandler.h"
-#import "SHHttpResponse.h"
+#import "SHHttpRoute.h"
 #import "NSURLRequest+Query.h"
 #import <UIKit/UIKit.h>
 
@@ -15,7 +15,7 @@
 
 + (void)registSandboxFileAPI
 {
-    [SHHttpResponse registAPI:@"/download.do" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+    [SHHttpRoute registAPI:@"/download.do" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
         NSDictionary *ps = [req queries_sh];
         NSString *path = [ps objectForKey:@"path"];
         NSString *fullPath = [NSHomeDirectory() stringByAppendingPathComponent:path];
@@ -26,17 +26,31 @@
                 
             }else{
                 NSFileHandle *fHandle = [NSFileHandle fileHandleForReadingAtPath:fullPath];
-                NSData *data = [fHandle readDataToEndOfFile];
-                callback(data,@"application/octet-stream");
+                NSData *payload = [fHandle readDataToEndOfFile];
+                
+                SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                    [maker setStatusCode:200];
+                    [maker setMimeType:@"application/octet-stream"];
+                    [maker setData:payload];
+                }];
+                
+                callback(resp);
             }
         }else{
-            NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
-            callback(data,@"text/json");
+            NSData *payload = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
+            
+            SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                [maker setStatusCode:200];
+                [maker setMimeType:@"text/json"];
+                [maker setData:payload];
+            }];
+            
+            callback(resp);
         }
         return YES;
     }];
     
-    [SHHttpResponse registAPI:@"/sandbox.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+    [SHHttpRoute registAPI:@"/sandbox.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
         
         NSDictionary *ps = [req queries_sh];
         NSString *path = [ps objectForKey:@"path"];
@@ -46,9 +60,15 @@
             NSDictionary *result = @{@"name":[[UIDevice currentDevice]name],
                                      @"path":@"/",
                                      @"isf":@(YES)};
-            NSData *data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
+            NSData *payload = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
             
-            callback(data,@"text/json");
+            SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                [maker setStatusCode:200];
+                [maker setMimeType:@"text/json"];
+                [maker setData:payload];
+            }];
+            
+            callback(resp);
         }else{
             NSString *fullPath = [NSHomeDirectory() stringByAppendingPathComponent:path];
             
@@ -70,24 +90,50 @@
                                                  @"isf":@(isD)}];
                         }
                         
-                        NSData *data = [NSJSONSerialization dataWithJSONObject:results options:NSJSONWritingPrettyPrinted error:nil];
+                        NSData *payload = [NSJSONSerialization dataWithJSONObject:results options:NSJSONWritingPrettyPrinted error:nil];
                         
-                        callback(data,@"text/json");
+                        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                            [maker setStatusCode:200];
+                            [maker setMimeType:@"text/json"];
+                            [maker setData:payload];
+                        }];
+                        
+                        callback(resp);
+                        
                     }else{
                         NSDictionary *result = @{@"name":@"文件夹空空的",
                                                  @"empty":@(YES),
                                                  @"isf":@(NO)};
-                        NSData *data = [NSJSONSerialization dataWithJSONObject:@[result] options:NSJSONWritingPrettyPrinted error:nil];
+                        NSData *payload = [NSJSONSerialization dataWithJSONObject:@[result] options:NSJSONWritingPrettyPrinted error:nil];
                         
-                        callback(data,@"text/json");
+                        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                            [maker setStatusCode:200];
+                            [maker setMimeType:@"text/json"];
+                            [maker setData:payload];
+                        }];
+                        
+                        callback(resp);
                     }
                 }else{
-                    NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
-                    callback(data,@"text/json");
+                    NSData *payload = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
+                    SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                        [maker setStatusCode:200];
+                        [maker setMimeType:@"text/json"];
+                        [maker setData:payload];
+                    }];
+                    
+                    callback(resp);
                 }
             }else{
-                NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
-                callback(data,@"text/json");
+                NSData *payload = [NSJSONSerialization dataWithJSONObject:@{@"err":@"not found"} options:NSJSONWritingPrettyPrinted error:nil];
+                
+                SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+                    [maker setStatusCode:200];
+                    [maker setMimeType:@"text/json"];
+                    [maker setData:payload];
+                }];
+                
+                callback(resp);
             }
         }
         return YES;

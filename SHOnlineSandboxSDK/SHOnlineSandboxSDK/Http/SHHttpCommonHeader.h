@@ -9,7 +9,9 @@
 #ifndef SHHttpCommonHeader_h
 #define SHHttpCommonHeader_h
 
-typedef void(^SHRequestCallback)(NSData *data,NSString *mime);
+#import "SHHttpResponse.h"
+
+typedef void(^SHRequestCallback)(SHHttpResponse *resp);
 typedef BOOL(^SHRequestHandler)(NSURLRequest *req,NSString *clientAddress,SHRequestCallback callback);
 
 #endif /* SHHttpCommonHeader_h */

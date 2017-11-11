@@ -2,17 +2,19 @@
 //  SHHttpResponse.h
 //  SHOnlineSandboxSDK
 //
-//  Created by 许乾隆 on 2017/10/11.
+//  Created by 许乾隆 on 2017/11/11.
 //  Copyright © 2017年 许乾隆. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "SHHttpResponseProtocol.h"
-#import "SHHttpCommonHeader.h"
 
-@interface SHHttpResponse : NSObject<SHHttpResponseProtocol>
+@interface SHHttpResponse : NSObject
 
-+ (void)registAPI:(NSString *)api handler:(SHRequestHandler)handler;
-+ (void)registResource:(NSString *)res handler:(SHRequestHandler)handler;
+@property (nonatomic, assign) NSInteger statusCode;
+@property (nonatomic, copy) NSString *mimeType;
+@property (nonatomic, strong) NSData *data;
+@property (nonatomic, strong) NSDictionary *header;
+
++ (instancetype)make:(void(^)(SHHttpResponse *maker))makeBlock;
 
 @end

@@ -12,16 +12,16 @@
 		B400988C1F7A8AD8001685EC /* SHOnlineSandboxSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = B400987E1F7A8AD8001685EC /* SHOnlineSandboxSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B40098971F7A8B56001685EC /* SHHttpServer.h in Headers */ = {isa = PBXBuildFile; fileRef = B40098951F7A8B56001685EC /* SHHttpServer.h */; };
 		B40098981F7A8B56001685EC /* SHHttpServer.m in Sources */ = {isa = PBXBuildFile; fileRef = B40098961F7A8B56001685EC /* SHHttpServer.m */; };
-		B400989D1F8E4DBE001685EC /* SHHttpResponseProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = B400989C1F8E4DBE001685EC /* SHHttpResponseProtocol.h */; };
-		B40098A01F8E5098001685EC /* SHHttpResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = B400989E1F8E5098001685EC /* SHHttpResponse.h */; };
-		B40098A11F8E5098001685EC /* SHHttpResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B400989F1F8E5098001685EC /* SHHttpResponse.m */; };
+		B400989D1F8E4DBE001685EC /* SHHttpRouteProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = B400989C1F8E4DBE001685EC /* SHHttpRouteProtocol.h */; };
+		B40098A01F8E5098001685EC /* SHHttpRoute.h in Headers */ = {isa = PBXBuildFile; fileRef = B400989E1F8E5098001685EC /* SHHttpRoute.h */; };
+		B40098A11F8E5098001685EC /* SHHttpRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = B400989F1F8E5098001685EC /* SHHttpRoute.m */; };
 		B40098A41F8E5F4D001685EC /* SHHttpResponseWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B40098A21F8E5F4D001685EC /* SHHttpResponseWriter.h */; };
 		B40098A51F8E5F4D001685EC /* SHHttpResponseWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = B40098A31F8E5F4D001685EC /* SHHttpResponseWriter.m */; };
 		B40098A81F8F95F9001685EC /* SHHttpService.h in Headers */ = {isa = PBXBuildFile; fileRef = B40098A61F8F95F9001685EC /* SHHttpService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B40098A91F8F95F9001685EC /* SHHttpService.m in Sources */ = {isa = PBXBuildFile; fileRef = B40098A71F8F95F9001685EC /* SHHttpService.m */; };
 		B40098AC1F8FB1B4001685EC /* SHOnlineSandbox.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B40098AB1F8FB1B4001685EC /* SHOnlineSandbox.bundle */; };
-		B48720191F9CC4D2007D0E52 /* SHFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B48720171F9CC4D2007D0E52 /* SHFileManager.h */; };
-		B487201A1F9CC4D2007D0E52 /* SHFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B48720181F9CC4D2007D0E52 /* SHFileManager.m */; };
+		B42386041FB6D64200F292E1 /* SHHttpResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = B42386021FB6D64200F292E1 /* SHHttpResponse.h */; };
+		B42386051FB6D64200F292E1 /* SHHttpResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B42386031FB6D64200F292E1 /* SHHttpResponse.m */; };
 		B487201D1F9CC54E007D0E52 /* SHSandboxHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = B487201B1F9CC54E007D0E52 /* SHSandboxHandler.h */; };
 		B487201E1F9CC54E007D0E52 /* SHSandboxHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B487201C1F9CC54E007D0E52 /* SHSandboxHandler.m */; };
 		B48720221F9CC73F007D0E52 /* NSURLRequest+Query.h in Headers */ = {isa = PBXBuildFile; fileRef = B48720201F9CC73F007D0E52 /* NSURLRequest+Query.h */; };
@@ -47,17 +47,17 @@
 		B400988B1F7A8AD8001685EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B40098951F7A8B56001685EC /* SHHttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpServer.h; sourceTree = "<group>"; };
 		B40098961F7A8B56001685EC /* SHHttpServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHHttpServer.m; sourceTree = "<group>"; };
-		B400989C1F8E4DBE001685EC /* SHHttpResponseProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpResponseProtocol.h; sourceTree = "<group>"; };
-		B400989E1F8E5098001685EC /* SHHttpResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpResponse.h; sourceTree = "<group>"; };
-		B400989F1F8E5098001685EC /* SHHttpResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHHttpResponse.m; sourceTree = "<group>"; };
+		B400989C1F8E4DBE001685EC /* SHHttpRouteProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpRouteProtocol.h; sourceTree = "<group>"; };
+		B400989E1F8E5098001685EC /* SHHttpRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpRoute.h; sourceTree = "<group>"; };
+		B400989F1F8E5098001685EC /* SHHttpRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHHttpRoute.m; sourceTree = "<group>"; };
 		B40098A21F8E5F4D001685EC /* SHHttpResponseWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpResponseWriter.h; sourceTree = "<group>"; };
 		B40098A31F8E5F4D001685EC /* SHHttpResponseWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHHttpResponseWriter.m; sourceTree = "<group>"; };
 		B40098A61F8F95F9001685EC /* SHHttpService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHHttpService.h; sourceTree = "<group>"; };
 		B40098A71F8F95F9001685EC /* SHHttpService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHHttpService.m; sourceTree = "<group>"; };
 		B40098AA1F8F9B0C001685EC /* SHHttpCommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHHttpCommonHeader.h; sourceTree = "<group>"; };
 		B40098AB1F8FB1B4001685EC /* SHOnlineSandbox.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SHOnlineSandbox.bundle; sourceTree = "<group>"; };
-		B48720171F9CC4D2007D0E52 /* SHFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHFileManager.h; sourceTree = "<group>"; };
-		B48720181F9CC4D2007D0E52 /* SHFileManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHFileManager.m; sourceTree = "<group>"; };
+		B42386021FB6D64200F292E1 /* SHHttpResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHHttpResponse.h; sourceTree = "<group>"; };
+		B42386031FB6D64200F292E1 /* SHHttpResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHHttpResponse.m; sourceTree = "<group>"; };
 		B487201B1F9CC54E007D0E52 /* SHSandboxHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHSandboxHandler.h; sourceTree = "<group>"; };
 		B487201C1F9CC54E007D0E52 /* SHSandboxHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHSandboxHandler.m; sourceTree = "<group>"; };
 		B48720201F9CC73F007D0E52 /* NSURLRequest+Query.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+Query.h"; sourceTree = "<group>"; };
@@ -133,9 +133,11 @@
 				B40098961F7A8B56001685EC /* SHHttpServer.m */,
 				B40098A21F8E5F4D001685EC /* SHHttpResponseWriter.h */,
 				B40098A31F8E5F4D001685EC /* SHHttpResponseWriter.m */,
-				B400989C1F8E4DBE001685EC /* SHHttpResponseProtocol.h */,
-				B400989E1F8E5098001685EC /* SHHttpResponse.h */,
-				B400989F1F8E5098001685EC /* SHHttpResponse.m */,
+				B400989C1F8E4DBE001685EC /* SHHttpRouteProtocol.h */,
+				B400989E1F8E5098001685EC /* SHHttpRoute.h */,
+				B400989F1F8E5098001685EC /* SHHttpRoute.m */,
+				B42386021FB6D64200F292E1 /* SHHttpResponse.h */,
+				B42386031FB6D64200F292E1 /* SHHttpResponse.m */,
 			);
 			path = Http;
 			sourceTree = "<group>";
@@ -143,8 +145,6 @@
 		B48720161F9CC4B8007D0E52 /* Sandbox */ = {
 			isa = PBXGroup;
 			children = (
-				B48720171F9CC4D2007D0E52 /* SHFileManager.h */,
-				B48720181F9CC4D2007D0E52 /* SHFileManager.m */,
 				B487201B1F9CC54E007D0E52 /* SHSandboxHandler.h */,
 				B487201C1F9CC54E007D0E52 /* SHSandboxHandler.m */,
 			);
@@ -168,12 +168,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B487201D1F9CC54E007D0E52 /* SHSandboxHandler.h in Headers */,
-				B40098A01F8E5098001685EC /* SHHttpResponse.h in Headers */,
+				B40098A01F8E5098001685EC /* SHHttpRoute.h in Headers */,
+				B42386041FB6D64200F292E1 /* SHHttpResponse.h in Headers */,
 				B48720221F9CC73F007D0E52 /* NSURLRequest+Query.h in Headers */,
 				B40098A81F8F95F9001685EC /* SHHttpService.h in Headers */,
 				B40098971F7A8B56001685EC /* SHHttpServer.h in Headers */,
-				B400989D1F8E4DBE001685EC /* SHHttpResponseProtocol.h in Headers */,
-				B48720191F9CC4D2007D0E52 /* SHFileManager.h in Headers */,
+				B400989D1F8E4DBE001685EC /* SHHttpRouteProtocol.h in Headers */,
 				B400988C1F7A8AD8001685EC /* SHOnlineSandboxSDK.h in Headers */,
 				B40098A41F8E5F4D001685EC /* SHHttpResponseWriter.h in Headers */,
 			);
@@ -282,8 +282,8 @@
 				B40098981F7A8B56001685EC /* SHHttpServer.m in Sources */,
 				B40098A51F8E5F4D001685EC /* SHHttpResponseWriter.m in Sources */,
 				B40098A91F8F95F9001685EC /* SHHttpService.m in Sources */,
-				B40098A11F8E5098001685EC /* SHHttpResponse.m in Sources */,
-				B487201A1F9CC4D2007D0E52 /* SHFileManager.m in Sources */,
+				B40098A11F8E5098001685EC /* SHHttpRoute.m in Sources */,
+				B42386051FB6D64200F292E1 /* SHHttpResponse.m in Sources */,
 				B487201E1F9CC54E007D0E52 /* SHSandboxHandler.m in Sources */,
 				B48720231F9CC73F007D0E52 /* NSURLRequest+Query.m in Sources */,
 			);

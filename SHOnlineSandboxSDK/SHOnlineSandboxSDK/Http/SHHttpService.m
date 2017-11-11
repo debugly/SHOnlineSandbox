@@ -8,7 +8,7 @@
 
 #import "SHHttpService.h"
 #import "SHHttpServer.h"
-#import "SHHttpResponse.h"
+#import "SHHttpRoute.h"
 #import "SHSandboxHandler.h"
 #import <UIKit/UIDevice.h>
 
@@ -34,7 +34,7 @@
         SHHttpServer *server = [SHHttpServer httpServer];
         [server startWithPort:port];
         [server resetRequestHandler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
-            return [SHHttpResponse handleRequest:req clientAddress:clientAddress callback:callback];
+            return [SHHttpRoute handleRequest:req clientAddress:clientAddress callback:callback];
         }];
         
         self.server = server;
@@ -59,13 +59,20 @@
 
 - (void)prepareHandlers
 {
-    [SHHttpResponse registAPI:@"/" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
-        NSString *text = @"<H1>Welcome to use Sohu Onlie Sandbox SDK.<H1>";
-        callback([text dataUsingEncoding:NSUTF8StringEncoding],@"text/html");
+    [SHHttpRoute registAPI:@"/" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+//        NSString *text = @"<H1>Welcome to use Sohu Onlie Sandbox SDK.<H1>";
+        
+        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+            [maker setStatusCode:301];
+            [maker setMimeType:@"text/html"];
+            [maker setHeader:@{@"Location":@"/index.html"}];
+        }];
+        
+        callback(resp);
         return YES;
     }];
     
-    [SHHttpResponse registAPI:@"/root.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+    [SHHttpRoute registAPI:@"/root.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
         
         NSString *urlCallback = nil;
         if ([req.URL.query rangeOfString:@"callback"].location != NSNotFound) {
@@ -88,19 +95,32 @@
         if (urlCallback) {
             payload = [NSString stringWithFormat:@"%@(%@)",urlCallback,payload];
         }
-        callback([payload dataUsingEncoding:NSUTF8StringEncoding],@"text/html");
+        
+        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+            [maker setStatusCode:200];
+            [maker setMimeType:@"text/json"];
+            [maker setData:[payload dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        callback(resp);
         return YES;
     }];
     
     
-    [SHHttpResponse registAPI:@"/uname.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
-        NSString *name = [[UIDevice currentDevice]name];
-        NSData *data = [name dataUsingEncoding:NSUTF8StringEncoding];
-        callback(data,@"text/plain");
+    [SHHttpRoute registAPI:@"/uname.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+        NSString *payload = [[UIDevice currentDevice]name];
+        
+        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+            [maker setStatusCode:200];
+            [maker setMimeType:@"text/plain"];
+            [maker setData:[payload dataUsingEncoding:NSUTF8StringEncoding]];
+        }];
+        
+        callback(resp);
         return YES;
     }];
     
-    [SHHttpResponse registAPI:@"/appinfo.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
+    [SHHttpRoute registAPI:@"/appinfo.json" handler:^BOOL(NSURLRequest *req, NSString *clientAddress, SHRequestCallback callback) {
         
         NSString *name = [[UIDevice currentDevice]name];
         NSString *sysName = [[UIDevice currentDevice]systemName];
@@ -130,8 +150,15 @@
                           @{@"IDFV" : idfv},
                           @{@"模式" : localizedModel}];
         
-        NSData *data = [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:nil];
-        callback(data,@"text/json");
+        NSData *payload = [NSJSONSerialization dataWithJSONObject:info options:NSJSONWritingPrettyPrinted error:nil];
+        
+        SHHttpResponse *resp = [SHHttpResponse make:^(SHHttpResponse *maker) {
+            [maker setStatusCode:200];
+            [maker setMimeType:@"text/json"];
+            [maker setData:payload];
+        }];
+        
+        callback(resp);
         return YES;
     }];
     
